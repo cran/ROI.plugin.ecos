@@ -12,21 +12,20 @@ make_ECOS_signatures <- function()
 ## SOLVER CONTROLS
 .add_controls <- function(solver) {
     ## ECOS
-    ROI_plugin_register_solver_control( solver, "VERBOSE", "verbose" )
-    ROI_plugin_register_solver_control( solver, "MAXIT", "max_iter" )
-    ROI_plugin_register_solver_control( solver, "FEASTOL", "tol" ) ## tolerance on the primal and dual residual
-    ## ROI_plugin_register_solver_control( solver, "MAXIT", "X" )
-    ## ROI_plugin_register_solver_control( solver, "FEASTOL", "X" )
-    ROI_plugin_register_solver_control( solver, "RELTOL", "X" )
-    ROI_plugin_register_solver_control( solver, "ABSTOL", "X" )
-    ROI_plugin_register_solver_control( solver, "FEASTOL_INACC", "X" )
-    ROI_plugin_register_solver_control( solver, "ABSTOL_INACC", "X" )
-    ROI_plugin_register_solver_control( solver, "RELTOL_INACC", "X" )
-    ## ROI_plugin_register_solver_control( solver, "VERBOSE", "X" )
-    ROI_plugin_register_solver_control( solver, "MI_MAX_ITERS", "X" )
-    ROI_plugin_register_solver_control( solver, "MI_INT_TOL", "X" )
-    ROI_plugin_register_solver_control( solver, "MI_ABS_EPS", "X" )
-    ROI_plugin_register_solver_control( solver, "MI_REL_EPS", "X" )
+    ROI_plugin_register_solver_control( solver, "verbose", "verbose" )
+    ROI_plugin_register_solver_control( solver, "maxit", "max_iter" )
+    ROI_plugin_register_solver_control( solver, "feastol", "tol" ) ## tolerance on the primal and dual residual
+
+    ROI_plugin_register_solver_control( solver, "reltol", "X" )
+    ROI_plugin_register_solver_control( solver, "abstol", "X" )
+    ROI_plugin_register_solver_control( solver, "feastol_inacc", "X" )
+    ROI_plugin_register_solver_control( solver, "abstol_inacc", "X" )
+    ROI_plugin_register_solver_control( solver, "reltol_inacc", "X" )
+    
+    ROI_plugin_register_solver_control( solver, "mi_max_iters", "X" )
+    ROI_plugin_register_solver_control( solver, "mi_int_tol", "X" )
+    ROI_plugin_register_solver_control( solver, "mi_abs_eps", "X" )
+    ROI_plugin_register_solver_control( solver, "mi_rel_eps", "X" )
 
     invisible( TRUE )
 }
@@ -36,7 +35,7 @@ make_ECOS_signatures <- function()
     if( ! pkgname %in% ROI_registered_solvers() ){
         ## Register solver methods here.
         ## One can assign several signatures a single solver method
-        solver <- ROI_plugin_get_solver_name( pkgname )
+        solver <- "ecos"
         ROI_plugin_register_solver_method(
             signatures = make_ECOS_signatures(),
             solver = solver,
