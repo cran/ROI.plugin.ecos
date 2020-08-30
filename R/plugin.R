@@ -9,7 +9,8 @@
 ##
 ## -----------------------------------------------------------------------------
 as_dgCMatrix <- function( x, ... ) {
-    sparseMatrix(i=x$i, j=x$j, x=x$v, dims=c(x$nrow, x$ncol))
+  if (is.null(x)) return(NULL)
+  Matrix::sparseMatrix(i=x$i, j=x$j, x=x$v, dims=c(x$nrow, x$ncol))
 }
 
 ecos_cones <- c("zero" = 1L, "nonneg" = 2L, "soc" = 3L, "expp" = 5L)
@@ -30,8 +31,9 @@ to_dense_vector <- function(x, len) {
 
 sanitize_control <- function(control) {
     cont <- ecos.control()
-    key <- names(control)[names(control) %in% names(cont)]
-    cont[key] <- control[key]
+    m <- match(names(control),  tolower(names(cont)))
+    k <- which(!is.na(m))
+    cont[m[k]] <- control[k]
     if ( is.numeric(cont$VERBOSE) & (length(cont$VERBOSE) == 1) ) {
         cont$VERBOSE <- if ( is.finite(cont$VERBOSE) ) as.integer(cont$VERBOSE) else 0L
     } else {
@@ -74,10 +76,9 @@ calc_dims <- function(cones, dims) {
     dims
 }
 
-
 ## BASIC SOLVER METHOD
 ## attach(getNamespace("ROI.plugin.ecos")); control <- list(); library(slam) ## for debugging
-solve_OP <- function(x, control = list()){
+solve_OP <- function(x, control = list()) {
     solver <- "ecos"
 
     constr <- as.C_constraint(constraints(x))
@@ -212,7 +213,7 @@ ROI_plugin_solution_dual.ecos_solution <- function(x) {
     ROI_plugin_add_status_code_to_db( solver,
                            10L,
                            "ECOS_OPTIMAL + ECOS_INACC_OFFSET",
-                           "Optimal solution found subject to reduced tolerances.", 1L)
+                           "Optimal solution found subject to reduced tolerances.", 0L)
     ROI_plugin_add_status_code_to_db( solver,
                            11L,
                            "ECOS_PINF + ECOS_INACC_OFFSET",
